@@ -45,7 +45,7 @@ class _SplashPageState extends State<SplashPage> {
 
     /// 调试阶段，直接跳过此组件
     if (context.mounted) {
-      Navigator.pushReplacementNamed(context, RouteName.appMain);
+      Navigator.pushReplacementNamed(context, RouteName.login);
     }
   }
 

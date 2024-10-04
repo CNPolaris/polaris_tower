@@ -2,15 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:polaris_tower/utils/index.dart';
 import '../../config/app_config.dart';
 import 'interceptors/header_interceptor.dart';
 import 'interceptors/log_interceptor.dart';
 
 Dio _initDio() {
   BaseOptions baseOpts = BaseOptions(
-    connectTimeout: const Duration(seconds: 50000),
     baseUrl: AppConfig.host,
-    responseType: ResponseType.plain, // 数据类型
     receiveDataWhenStatusError: true,
   );
   Dio dioClient = Dio(baseOpts); // 实例化请求，可以传入options参数
@@ -37,27 +36,6 @@ Dio _initDio() {
   return dioClient;
 }
 
-/// 底层请求方法说明
-///
-/// [options] dio请求的配置参数，默认get请求
-///
-/// [data] 请求参数
-///
-/// [cancelToken] 请求取消对象
-///
-///```dart
-///CancelToken token = CancelToken(); // 通过CancelToken来取消发起的请求
-///
-///safeRequest(
-///  "/test",
-///  data: {"id": 12, "name": "xx"},
-///  options: Options(method: "POST"),
-/// cancelToken: token,
-///);
-///
-///// 取消请求
-///token.cancel("cancelled");
-///```
 Future<T> safeRequest<T>(
   String url, {
   Object? data,
@@ -76,6 +54,7 @@ Future<T> safeRequest<T>(
         )
         .then((data) => jsonDecode(data.data as String) as T);
   } catch (e) {
+    LogUtil.d(e);
     rethrow;
   }
 }

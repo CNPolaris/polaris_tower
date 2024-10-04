@@ -129,7 +129,7 @@ class _CustomInputState extends State<CustomInput> {
             focusNode: _focusNode,
             autofocus: widget.autofocus!,
             keyboardType: widget.keyboardType, // 默认键盘类型
-            inputFormatters: widget.inputFormatters ?? dyFormatters(),
+            inputFormatters: widget.inputFormatters ,//?? dyFormatters(),
             decoration: InputDecoration(
               hintText: widget.hintText ?? '',
               hintStyle: TextStyle(

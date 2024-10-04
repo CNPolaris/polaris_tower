@@ -5,14 +5,14 @@ const userInfoKey = 'userInfoKey';
 
 class UserUtil {
   /// 获取缓存用户信息
-  static Future<LoginMobileData> getUserInfo() async {
+  static Future<LoginData> getUserInfo() async {
     var cacheData = await SpUtil.getMap(userInfoKey, defValue: {});
-    return LoginMobileData.fromJson(cacheData.cast<String, dynamic>());
+    return LoginData.fromJson(cacheData.cast<String, dynamic>());
   }
 
   /// 保存用户信息
-  static Future<void> saveUserInfo(LoginMobileData data) async {
-    data.avatar = data.avatar?.replaceAll(RegExp(r'http://'), 'https://');
+  static Future<void> saveUserInfo(LoginData data) async {
+    // data.avatar = data.avatar?.replaceAll(RegExp(r'http://'), 'https://');
     SpUtil.setMapData(userInfoKey, data.toJson());
   }
 
@@ -24,20 +24,20 @@ class UserUtil {
   /// 获取token
   static Future<String> getToken() async {
     var userInfo = await getUserInfo();
-    return userInfo.authorization ?? '';
+    return userInfo.accessToken ?? '';
   }
 
   /// 设置token
   static Future<void> setToken(String value) async {
     var userInfo = await getUserInfo();
-    userInfo.authorization = value;
+    userInfo.accessToken = value;
     saveUserInfo(userInfo);
   }
 
   /// 清除token
   static Future<void> cleanToKen() async {
     var userInfo = await getUserInfo();
-    userInfo.authorization = '';
+    userInfo.accessToken = '';
     saveUserInfo(userInfo);
   }
 }

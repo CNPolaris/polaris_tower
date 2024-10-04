@@ -1,5 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jh_debug/mainFn.dart';
+import 'package:polaris_tower/pages/app_main/app_main.dart';
+import '../../routes/route_name.dart';
 import 'components/basic_btn/basic_btn.dart';
 import 'components/custom_checkbox/custom_checkbox.dart';
 import 'components/custom_input/custom_input.dart';
@@ -7,6 +11,7 @@ import '../../models/login.m.dart';
 import '../../utils/tool/user_util.dart';
 import '../../utils/tool/tips_util.dart';
 import '../../utils/index.dart';
+import '../../services/login_service.dart' as wvp;
 
 class Login extends StatefulWidget {
   const Login({Key? key, this.params}) : super(key: key);
@@ -21,8 +26,8 @@ class _LoginState extends State<Login> {
   final double baseTextSize = 32.sp; // 输入框文字
   final double _slaSize = 26.sp; // 协议文字大小
   Color desTextColor = const Color(0xFFB4B9C6);
-  final _phoneController = TextEditingController();
-  final _captchaController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
   Color btnDisableColor = const Color(0xffAFD1FC); // 禁用按钮颜色
   bool isSelected = false; // 协议勾选
 
@@ -34,47 +39,48 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
-    _phoneController.dispose();
-    _captchaController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
     FocusScope.of(context).requestFocus(blankNode);
     super.dispose();
   }
 
   Future<void> initData() async {
-    LoginMobileData userInfo = await UserUtil.getUserInfo();
-    if (userInfo.mobile?.isNotEmpty ?? false) {
-      _phoneController.text = userInfo.mobile!;
+    LoginData userInfo = await UserUtil.getUserInfo();
+    if (userInfo.username?.isNotEmpty ?? false) {
+      _usernameController.text = userInfo.username!;
     }
   }
 
-  // 是否是手机号
-  bool inputIsPhone() {
-    if (isPhone(_phoneController.text)) return true;
-    Tips.info('请输入正确手机号码');
-    return false;
-  }
-
-  // 验证码点击
-  Future<bool> onTapCaptcha(int value) async {
-    if (!inputIsPhone()) return true;
-    return false;
+  bool checkInput() {
+      return _passwordController.text.isNotEmpty && _usernameController.text.isNotEmpty;
   }
 
   // 登入按钮
   login() async {
-    if (!inputIsPhone()) return;
-    FocusScope.of(context).requestFocus(blankNode);
-    if (!isSelected) return Tips.info('请确认已阅读用户协议和隐私协议');
-    String captText = _captchaController.text;
-    if (captText.isEmpty || captText.length < 6) return Tips.info('请输入正确的验证码');
+    // if (!checkInput()) return;
+    // FocusScope.of(context).requestFocus(blankNode);
+    // if (!isSelected) return Tips.info('请确认已阅读用户协议和隐私协议');
+    //
+    // String pwText = _passwordController.text;
+    // if (pwText.isEmpty || pwText.length < 6) return Tips.info('请输入正确的密码');
 
-    // TODO: 登入请求逻辑
-    LoginMobileData userData = LoginMobileData(
-      mobile: _phoneController.text,
-    );
-    // 成功后，回退上一页
-    await UserUtil.saveUserInfo(userData);
-    if (context.mounted) Navigator.pop(context, true);
+    // LoginResp res = await wvp.login();
+    // if(res.data?.accessToken != null) {
+    //   // TODO: 登入请求逻辑
+    //   LoginData userData = LoginData(
+    //     username: _usernameController.text,
+    //     password: _passwordController.text,
+    //     accessToken: res.data?.accessToken,
+    //   );
+    //   await UserUtil.saveUserInfo(userData);
+    //   // 成功后，回退上一页
+    //   if (context.mounted) {
+    //     // Navigator.pop(context, true);
+    //     Navigator.pushNamed(context, RouteName.appMain);
+    //   }
+    // }
+    Navigator.pushNamed(context, RouteName.appMain);
   }
 
   @override
@@ -98,16 +104,17 @@ class _LoginState extends State<Login> {
           navWidget(),
           CustomInput(
             margin: EdgeInsets.only(bottom: 23.w),
-            controller: _phoneController,
+            controller: _usernameController,
             autofocus: true,
-            hintText: '点击输入手机号码',
-            inputType: InputType.close,
+            hintText: '点击输入用户名',
+            inputType: InputType.normal,
+            keyboardType: TextInputType.text,
           ),
           CustomInput(
-            controller: _captchaController,
-            hintText: '点击输入短信验证码',
-            inputType: InputType.captcha,
-            onTapCaptcha: onTapCaptcha,
+            controller: _passwordController,
+            hintText: '点击输入密码',
+            inputType: InputType.normal,
+            keyboardType: TextInputType.text,
           ),
           bottomBtn(),
           slaText(),
