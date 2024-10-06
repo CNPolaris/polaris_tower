@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:polaris_tower/utils/index.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../components/update_app/check_app_version.dart';
-import '../../../routes/route_name.dart';
-import '../../../config/app_env.dart' show appEnv;
-import 'provider/counterStore.p.dart';
-import './components/custom_circle.dart';
+import '../../../config/app_config.dart';
+import '../../../models/common.m.dart';
+import 'components/resource_chart.dart';
+import './provider/cpuInfoStore.p.dart';
+import './components/cpu_chart.dart';
+import './components/memory_chart.dart';
+import '../../../services/common_service.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, this.params});
@@ -16,18 +20,67 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
+
+  late CpuInfoStore _cpuInfoStore;
+
   @override
   bool get wantKeepAlive => true;
 
   FocusNode blankNode = FocusNode(); // 响应空白处的焦点的Node
 
+  late Timer _updateSystemInfoTimer;
+
+  Device _device = Device();
+  Device _push = Device();
+  Device _proxy = Device();
+  Device _channel = Device();
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    _updateSystemInfoTimer = Timer.periodic(Duration(milliseconds: AppConfig.updateDelay), (timer) async {
+      ///定时任务
+      SystemInfoResp sysInfoRes = await getSystemInfo();
+      if(sysInfoRes.code == 0) {
+        List<CpuInfo?>? cpuList = sysInfoRes.data!.cpu;
+        _cpuInfoStore.set(cpuList);
+      }
+
+      ResourceInfoResp resp = await getResourceInfo();
+      if (resp.code == 0) {
+        _device = resp.data!.device!;
+        _channel = resp.data!.channel!;
+        _proxy = resp.data!.proxy!;
+        _push = resp.data!.push!;
+      }
+    });
+  }
+
+  @override
+  void activate() {
+    super.activate();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _updateSystemInfoTimer.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
+    _cpuInfoStore = Provider.of<CpuInfoStore>(context);
+
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('home页面'),
+        title: const Text('控制台'),
         automaticallyImplyLeading: false,
       ),
       body: GestureDetector(
@@ -35,76 +88,65 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
           // 点击空白页面关闭键盘
           FocusScope.of(context).requestFocus(blankNode);
         },
-        child: contextWidget(),
+        child: contextWidget(width),
       ),
     );
   }
 
-  Widget contextWidget() {
+  Widget contextWidget(double width) {
     return ListView(
       children: List.generate(1, (index) {
         return Column(
             children: <Widget>[
-              _buildStatusCard()
+              _buildDeviceChannelInfo(width),
+              _buildDeviceChannelInfo2(width),
+              _buildCpuChartWidget(),
+              _buildMemoryChartWidget(),
             ]
         );
       }),
     );
   }
 
-  Widget _buildStatusCard() {
+  Widget _buildDeviceChannelInfo(double width) {
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(
+        top: 10,
+        left: 10,
+        right: 10,
+        bottom: 5,
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         child: IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              Expanded(
-                flex: 1,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                            "222.222.222.222"
-                        ),
-                        Text(
-                          "Test"
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 10,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                          GradientCircularProgressIndicator(
-                            // No gradient
-                            colors: const [Colors.blue, Colors.blue],
-                            radius: 30.0,
-                            stokeWidth: 5.0,
-                            value: 0.1,
-                            title: "CPU",
-                          ),
-                        GradientCircularProgressIndicator(
-                          // No gradient
-                          colors: const [Colors.blue, Colors.blue],
-                          radius: 30.0,
-                          stokeWidth: 5.0,
-                          value: 0.5,
-                          title: "内存",
-                        ),
-                      ],
-                    )
-                    ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ResourceIndicatorWidget(
+                    // No gradient
+                    colors: const [Colors.blue, Colors.blue],
+                    radius: (width - 40) / 6,
+                    stokeWidth: 8.0,
+                    value: _device.online,
+                    total: _device.total,
+                    title: "在线设备",
+                  ),
+                  ResourceIndicatorWidget(
+                    // No gradient
+                    colors: const [Colors.blue, Colors.blue],
+                    radius: (width - 40) / 6,
+                    stokeWidth: 8.0,
+                    value: _channel.online,
+                    total: _channel.total,
+                    title: "通道总数",
+                  ),
+                ],
               )
             ],
           ),
@@ -113,15 +155,99 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
     );
   }
 
-  Widget _button(String text, {VoidCallback? onPressed}) {
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      child: ElevatedButton(
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 22.sp),
+  Widget _buildDeviceChannelInfo2(double width) {
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: const EdgeInsets.only(
+        top: 10,
+        left: 10,
+        right: 10,
+        bottom: 5,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: IntrinsicHeight(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ResourceIndicatorWidget(
+                    // No gradient
+                    colors: const [Colors.blue, Colors.blue],
+                    radius: (width - 40) / 6,
+                    stokeWidth: 8.0,
+                    value: _push.online,
+                    total: _push.total,
+                    title: "推流总数",
+                  ),
+                  ResourceIndicatorWidget(
+                    // No gradient
+                    colors: const [Colors.blue, Colors.blue],
+                    radius: (width - 40) / 6,
+                    stokeWidth: 8.0,
+                    value: _proxy.online,
+                    total: _proxy.total,
+                    title: "代理总数",
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCpuChartWidget() {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: const EdgeInsets.only(
+        top: 5,
+        left: 10,
+        right: 10,
+        bottom: 5
+      ),
+      child: Column(
+        children: [
+          const Text("CPU", style: style, textAlign: TextAlign.center),
+          CpuChartWidget(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMemoryChartWidget() {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: const EdgeInsets.only(
+          top: 5,
+          left: 10,
+          right: 10,
+          bottom: 5
+      ),
+      child: const Column(
+        children: [
+          Text("内存", style: style, textAlign: TextAlign.center),
+          MemoryChartWidget()
+        ],
       ),
     );
   }

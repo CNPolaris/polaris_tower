@@ -65,22 +65,22 @@ class _LoginState extends State<Login> {
     // String pwText = _passwordController.text;
     // if (pwText.isEmpty || pwText.length < 6) return Tips.info('请输入正确的密码');
 
-    // LoginResp res = await wvp.login();
-    // if(res.data?.accessToken != null) {
-    //   // TODO: 登入请求逻辑
-    //   LoginData userData = LoginData(
-    //     username: _usernameController.text,
-    //     password: _passwordController.text,
-    //     accessToken: res.data?.accessToken,
-    //   );
-    //   await UserUtil.saveUserInfo(userData);
-    //   // 成功后，回退上一页
-    //   if (context.mounted) {
-    //     // Navigator.pop(context, true);
-    //     Navigator.pushNamed(context, RouteName.appMain);
-    //   }
-    // }
-    Navigator.pushNamed(context, RouteName.appMain);
+    LoginResp res = await wvp.login();
+    if(res.data?.accessToken != null) {
+      // TODO: 登入请求逻辑
+      LoginData userData = LoginData(
+        username: _usernameController.text,
+        password: _passwordController.text,
+        accessToken: res.data?.accessToken,
+      );
+      await UserUtil.saveUserInfo(userData);
+      // 成功后，回退上一页
+      if (context.mounted) {
+        // Navigator.pop(context, true);
+        Navigator.pushNamed(context, RouteName.appMain);
+      }
+    }
+    // Navigator.pushNamed(context, RouteName.appMain);
   }
 
   @override

@@ -36,4 +36,6 @@ class AppConfig {
 
   /// 反向代理的IP/域名地址
   static const proxyAddress = '192.168.2.201:9003';
+
+  static int updateDelay = 5000;
 }

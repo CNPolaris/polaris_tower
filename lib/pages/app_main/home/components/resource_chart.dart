@@ -1,9 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:sprintf/sprintf.dart';
 
 /// A circular progress indicator with gradient effect.
-class GradientCircularProgressIndicator extends StatelessWidget {
-  const GradientCircularProgressIndicator({
+class ResourceIndicatorWidget extends StatelessWidget {
+  const ResourceIndicatorWidget({
     Key? key,
     required this.radius,
     this.stokeWidth = 2.0,
@@ -14,13 +15,14 @@ class GradientCircularProgressIndicator extends StatelessWidget {
     this.totalAngle = 2 * pi,
     this.fullColor,
     this.value,
+    this.total,
     this.title,
   }) : super(key: key);
 
   /// The width of the line used to draw the circle.
   final double stokeWidth;
 
-  /// The radius of the [GradientCircularProgressIndicator]
+  /// The radius of the [ResourceIndicatorWidget]
   final double radius;
 
   /// The kind of finish to place on the end of arc drawn .
@@ -30,7 +32,9 @@ class GradientCircularProgressIndicator extends StatelessWidget {
   /// The value of this progress indicator with 0.0 corresponding
   /// to no progress having been made and 1.0 corresponding to all the progress
   /// having been made.
-  final double? value;
+  final int? value;
+
+  final int? total;
 
   final String? title;
 
@@ -87,11 +91,11 @@ class GradientCircularProgressIndicator extends StatelessWidget {
         angle: -pi / 2.0 - _offset,
         child: CustomPaint(
           size: Size.fromRadius(radius),
-          painter: _GradientCircularProgressPainter(
+          painter: _ResourceIndicatorWidgetPainter(
             stokeWidth: stokeWidth,
             strokeCapRound: strokeCapRound,
             backgroundColor: backgroundColor,
-            value: value,
+            value: value! > 0 ? value! / total! : 0,
             fullColor: fullColor,
             total: totalAngle,
             radius: radius,
@@ -104,7 +108,7 @@ class GradientCircularProgressIndicator extends StatelessWidget {
         right: radius / 2,
         child: Container(
           width: radius,
-          child: Text(value.toString(), textAlign: TextAlign.center),
+          child: Text(sprintf("%d/%d", [value, total]), textAlign: TextAlign.center),
         ),
       ),
       Positioned(
@@ -120,8 +124,8 @@ class GradientCircularProgressIndicator extends StatelessWidget {
   }
 }
 
-class _GradientCircularProgressPainter extends CustomPainter {
-  const _GradientCircularProgressPainter({
+class _ResourceIndicatorWidgetPainter extends CustomPainter {
+  const _ResourceIndicatorWidgetPainter({
     this.stokeWidth = 10.0,
     this.strokeCapRound = false,
     this.backgroundColor = const Color(0xFFEEEEEE),
@@ -188,7 +192,7 @@ class _GradientCircularProgressPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_GradientCircularProgressPainter old) {
+  bool shouldRepaint(_ResourceIndicatorWidgetPainter old) {
     return old.stokeWidth != stokeWidth ||
         old.strokeCapRound != strokeCapRound ||
         old.backgroundColor != backgroundColor ||

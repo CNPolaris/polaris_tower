@@ -15,7 +15,7 @@ enum ENV {
 
 // dio请求前缀
 final Map<ENV, String> _baseUrl = {
-  ENV.DEV: 'https://www.ylcx.co:8978',
+  ENV.DEV: 'http://222.189.40.82:18978',
   ENV.TEST: 'https://urltest.com',
   ENV.PRE: 'https://urlpre.com',
   ENV.PROD: 'https://url.com',

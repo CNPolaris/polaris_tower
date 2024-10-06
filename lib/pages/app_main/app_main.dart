@@ -12,8 +12,8 @@ import '../../config/app_config.dart';
 import '../../components/exit_app_interceptor/exit_app_interceptor.dart';
 import '../../provider/global.p.dart';
 import 'my_personal/my_personal.dart';
-import 'search/search.dart';
-import 'hot/hot.dart';
+import 'devices/devices.dart';
+import 'record/record.dart';
 import 'home/home.dart';
 
 class AppMain extends StatefulWidget {
@@ -52,12 +52,12 @@ class _AppMainState extends State<AppMain>
     {
       'title': '国标设备',
       'icon': Icons.whatshot,
-      'body': const Hot(),
+      'body': const DevicesPage(),
     },
     {
       'title': '录像',
       'icon': Icons.search,
-      'body': Search(),
+      'body': const RecordPage(),
     },
     {
       'title': '设置',

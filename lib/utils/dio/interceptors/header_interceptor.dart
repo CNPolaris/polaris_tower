@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:polaris_tower/config/app_config.dart';
 
+import '../../tool/user_util.dart';
+
 /*
  * header拦截器
  */
@@ -9,6 +11,7 @@ class HeaderInterceptors extends InterceptorsWrapper {
   @override
   onRequest(RequestOptions options, handler) async {
     options.baseUrl = AppConfig.host;
+    options.headers['Access-token'] = UserUtil.getToken();
     return handler.next(options);
   }
 
