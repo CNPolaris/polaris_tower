@@ -1,5 +1,25 @@
 import 'dart:ffi';
 
+// 后端服务信息本地缓存
+class SystemInfoConfig {
+  int? port;
+  String? host;
+
+  SystemInfoConfig({this.host, this.port});
+
+  SystemInfoConfig.fromJson(Map<String, dynamic> json) {
+    host = json['host'];
+    port = json['port'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['host'] = host;
+    json['port'] = port;
+    return json;
+  }
+}
+
 class NewVersionRes {
   String? code;
   String? message;
