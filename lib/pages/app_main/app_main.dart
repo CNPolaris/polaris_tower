@@ -11,6 +11,7 @@ import '../../config/app_env.dart' show appEnv, ENV;
 import '../../config/app_config.dart';
 import '../../components/exit_app_interceptor/exit_app_interceptor.dart';
 import '../../provider/global.p.dart';
+import '../../utils/tool/event_bus.dart';
 import 'my_personal/my_personal.dart';
 import 'devices/devices.dart';
 import 'record/record.dart';
@@ -69,6 +70,13 @@ class _AppMainState extends State<AppMain>
   @override
   void initState() {
     super.initState();
+    /// 登录登出事件监听
+    EventBus.instance.addListener(EventKeys.logout, () {
+      // 移除事件监听
+      EventBus.instance.removeListener(EventKeys.logout);
+      // 跳转登录界面
+      Navigator.of(context).pushNamedAndRemoveUntil(RouteName.appMain, (route)=>false);
+    });
 
     handleCurrentIndex();
     initTools();
@@ -93,6 +101,10 @@ class _AppMainState extends State<AppMain>
   @override
   void dispose() {
     pageController.dispose();
+
+    // 移除事件监听
+    EventBus.instance.removeListener(EventKeys.logout);
+
     FocusScope.of(context).requestFocus(FocusNode()); // 选择焦点，收起键盘效果
     super.dispose();
   }

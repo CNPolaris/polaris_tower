@@ -82,7 +82,7 @@ class _LoginState extends State<Login> {
       await UserUtil.saveUserInfo(userData);
       // 成功后，回退上一页
       if (context.mounted) {
-        Future.delayed(const Duration(milliseconds: 2000), () {//2秒
+        Future.delayed(const Duration(milliseconds: 1000), () {//2秒
           Navigator.pushNamed(context, RouteName.appMain);
         });
       }

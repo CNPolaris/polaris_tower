@@ -69,6 +69,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
     _updateSystemInfoTimer.cancel();
   }
 
+
   @override
   Widget build(BuildContext context) {
     super.build(context);

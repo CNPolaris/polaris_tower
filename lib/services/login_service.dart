@@ -10,8 +10,7 @@ Future<LoginResp> login() async{
     options: Options(method: 'GET', responseType: ResponseType.plain),
     queryParameters: {
       "username": "admin",
-      // 'password': "07abdbd30ef8b6a39c8edaf351822f9e"
-      'password': 'd58c7cdb7206d036fcad84e25f9a8357'
+      'password': "07abdbd30ef8b6a39c8edaf351822f9e"
     },
   );
   return LoginResp.fromJson(res);

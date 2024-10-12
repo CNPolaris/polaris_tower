@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:polaris_tower/config/app_config.dart';
-
+import '../../tool/event_bus.dart';
 import '../../tool/user_util.dart';
 
 /*
@@ -27,6 +27,11 @@ class HeaderInterceptors extends InterceptorsWrapper {
   // 请求失败拦截
   @override
   onError(err, handler) async {
-    return handler.next(err); //continue
+    super.onError(err, handler);
+    int ? errCode = err.response?.statusCode;
+    if (errCode == 401) {
+      // 触发登出事件
+      EventBus.instance.commit(EventKeys.logout);
+    }
   }
 }
