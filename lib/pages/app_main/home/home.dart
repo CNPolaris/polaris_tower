@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bruno/bruno.dart';
 import 'package:flutter/material.dart';
 import 'package:polaris_tower/utils/index.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,6 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   Device _push = Device();
   Device _proxy = Device();
   Device _channel = Device();
-
 
   @override
   void initState() {
@@ -109,46 +109,51 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   }
 
   Widget _buildDeviceChannelInfo(double width) {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+    return Container(
       margin: const EdgeInsets.only(
         top: 10,
         left: 10,
         right: 10,
         bottom: 5,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: IntrinsicHeight(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ResourceIndicatorWidget(
-                    // No gradient
-                    colors: const [Colors.blue, Colors.blue],
-                    radius: (width - 40) / 6,
-                    stokeWidth: 8.0,
-                    value: _device.online,
-                    total: _device.total,
-                    title: "在线设备",
-                  ),
-                  ResourceIndicatorWidget(
-                    // No gradient
-                    colors: const [Colors.blue, Colors.blue],
-                    radius: (width - 40) / 6,
-                    stokeWidth: 8.0,
-                    value: _channel.online,
-                    total: _channel.total,
-                    title: "通道总数",
-                  ),
-                ],
-              )
-            ],
+      child: BrnShadowCard(
+        circular: 10,
+        padding: const EdgeInsets.only(
+          top: 5,
+          left: 5,
+          right: 5,
+          bottom: 5,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: IntrinsicHeight(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ResourceIndicatorWidget(
+                      // No gradient
+                      colors: const [Colors.blue, Colors.blue],
+                      radius: (width - 40) / 6,
+                      stokeWidth: 8.0,
+                      value: _device.online,
+                      total: _device.total,
+                      title: "在线设备",
+                    ),
+                    ResourceIndicatorWidget(
+                      // No gradient
+                      colors: const [Colors.blue, Colors.blue],
+                      radius: (width - 40) / 6,
+                      stokeWidth: 8.0,
+                      value: _channel.online,
+                      total: _channel.total,
+                      title: "通道总数",
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -156,46 +161,51 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   }
 
   Widget _buildDeviceChannelInfo2(double width) {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+    return Container(
       margin: const EdgeInsets.only(
-        top: 10,
+        top: 5,
         left: 10,
         right: 10,
         bottom: 5,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: IntrinsicHeight(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ResourceIndicatorWidget(
-                    // No gradient
-                    colors: const [Colors.blue, Colors.blue],
-                    radius: (width - 40) / 6,
-                    stokeWidth: 8.0,
-                    value: _push.online,
-                    total: _push.total,
-                    title: "推流总数",
-                  ),
-                  ResourceIndicatorWidget(
-                    // No gradient
-                    colors: const [Colors.blue, Colors.blue],
-                    radius: (width - 40) / 6,
-                    stokeWidth: 8.0,
-                    value: _proxy.online,
-                    total: _proxy.total,
-                    title: "代理总数",
-                  ),
-                ],
-              )
-            ],
+      child: BrnShadowCard(
+        circular: 10,
+        padding: const EdgeInsets.only(
+          top: 5,
+          left: 5,
+          right: 5,
+          bottom: 5,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: IntrinsicHeight(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ResourceIndicatorWidget(
+                      // No gradient
+                      colors: const [Colors.blue, Colors.blue],
+                      radius: (width - 40) / 6,
+                      stokeWidth: 8.0,
+                      value: _push.online,
+                      total: _push.total,
+                      title: "推流总数",
+                    ),
+                    ResourceIndicatorWidget(
+                      // No gradient
+                      colors: const [Colors.blue, Colors.blue],
+                      radius: (width - 40) / 6,
+                      stokeWidth: 8.0,
+                      value: _proxy.online,
+                      total: _proxy.total,
+                      title: "代理总数",
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -207,22 +217,27 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       fontWeight: FontWeight.bold,
       fontSize: 16,
     );
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+    return Container(
       margin: const EdgeInsets.only(
         top: 5,
         left: 10,
         right: 10,
-        bottom: 5
+        bottom: 5,
       ),
-      child: Column(
-        children: [
-          const Text("CPU", style: style, textAlign: TextAlign.center),
-          CpuChartWidget(),
-        ],
+      child: BrnShadowCard(
+        circular: 10,
+        padding: const EdgeInsets.only(
+          top: 5,
+          left: 5,
+          right: 5,
+          bottom: 5,
+        ),
+        child: Column(
+          children: [
+            const Text("CPU", style: style, textAlign: TextAlign.center),
+            CpuChartWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -232,23 +247,28 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       fontWeight: FontWeight.bold,
       fontSize: 16,
     );
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      margin: const EdgeInsets.only(
+    return Container(
+        margin: const EdgeInsets.only(
           top: 5,
           left: 10,
           right: 10,
-          bottom: 5
-      ),
-      child: const Column(
-        children: [
-          Text("内存", style: style, textAlign: TextAlign.center),
-          MemoryChartWidget()
-        ],
-      ),
+          bottom: 5,
+        ),
+        child: BrnShadowCard(
+          circular: 10,
+          padding: const EdgeInsets.only(
+            top: 5,
+            left: 5,
+            right: 5,
+            bottom: 5,
+          ),
+          child: const Column(
+            children: [
+              Text("内存", style: style, textAlign: TextAlign.center),
+              MemoryChartWidget()
+            ],
+          ),
+        )
     );
   }
 }

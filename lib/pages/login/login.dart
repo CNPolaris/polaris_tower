@@ -12,6 +12,7 @@ import '../../utils/tool/user_util.dart';
 import '../../utils/tool/tips_util.dart';
 import '../../utils/index.dart';
 import '../../services/login_service.dart' as wvp;
+import 'package:bruno/bruno.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key, this.params}) : super(key: key);
@@ -67,6 +68,11 @@ class _LoginState extends State<Login> {
 
     LoginResp res = await wvp.login();
     if(res.data?.accessToken != null) {
+      BrnToast.show(
+        "登录成功",
+        context,
+        duration: BrnDuration.short,
+      );
       // TODO: 登入请求逻辑
       LoginData userData = LoginData(
         username: _usernameController.text,
@@ -76,9 +82,16 @@ class _LoginState extends State<Login> {
       await UserUtil.saveUserInfo(userData);
       // 成功后，回退上一页
       if (context.mounted) {
-        // Navigator.pop(context, true);
-        Navigator.pushNamed(context, RouteName.appMain);
+        Future.delayed(const Duration(milliseconds: 2000), () {//2秒
+          Navigator.pushNamed(context, RouteName.appMain);
+        });
       }
+    } else {
+        BrnToast.show(
+        "登录失败",
+        context,
+        duration: BrnDuration.short,
+      );
     }
     // Navigator.pushNamed(context, RouteName.appMain);
   }
