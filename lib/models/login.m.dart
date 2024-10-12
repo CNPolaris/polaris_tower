@@ -38,7 +38,7 @@ class LoginData {
   });
   LoginData.fromJson(Map<String, dynamic> json) {
     id = json["id"];
-    accessToken = json["accessToken"];
+    accessToken = json["accessToken"] ?? '';
     credentialsNonExpired = json["credentialsNonExpired"];
     accountNonExpired = json["accountNonExpired"];
     accountNonLocked = json["accountNonLocked"];

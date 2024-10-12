@@ -11,7 +11,9 @@ class HeaderInterceptors extends InterceptorsWrapper {
   @override
   onRequest(RequestOptions options, handler) async {
     options.baseUrl = AppConfig.host;
-    options.headers['Access-token'] = UserUtil.getToken();
+    if(UserUtil.getToken().toString().isNotEmpty) {
+      options.headers['Access-token'] = UserUtil.getToken().toString();
+    }
     return handler.next(options);
   }
 
