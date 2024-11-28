@@ -17,4 +17,10 @@ class RouteName {
 
   /// 注册页
   static String register = '/register';
+
+  static String device = '/device';
+
+  static String channel = '/channel';
+
+  static String liveVideo = '/video/live';
 }

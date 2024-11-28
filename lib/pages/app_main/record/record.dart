@@ -1,3 +1,4 @@
+import 'package:bruno/bruno.dart';
 import 'package:flutter/material.dart';
 import '../../../utils/index.dart';
 
@@ -30,7 +31,7 @@ class _RecordPageState extends State<RecordPage> with AutomaticKeepAliveClientMi
     super.build(context);
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: BrnAppBar(
         title: const Text ('云端录像'),
         automaticallyImplyLeading: false,
       ),

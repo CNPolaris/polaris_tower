@@ -40,7 +40,8 @@ dependencies:
   fl_chart: ^0.69.0
   sprintf: ^7.0.0
   date_format: ^2.0.9
-  bruno: ^3.4.0
+  bruno: ^3.4.3
+  infinite_scroll_pagination: ^4.1.0
 
 dev_dependencies:
   flutter_test:
