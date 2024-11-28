@@ -144,7 +144,9 @@ class _ChannelListPageState extends State<ChannelListPage> with AutomaticKeepAli
                           ElevatedButton.icon(
                             icon: Icon(Icons.play_arrow),
                             label: Text("播放"),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, RouteName.channel, arguments: {'deviceId': item.deviceId, 'onLine': onLine, 'channelId': item.deviceId});
+                            },
                           ),
                           ElevatedButton.icon(
                             icon: Icon(Icons.emergency_recording),

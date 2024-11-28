@@ -21,4 +21,6 @@ class RouteName {
   static String device = '/device';
 
   static String channel = '/channel';
+
+  static String liveVideo = '/video/live';
 }

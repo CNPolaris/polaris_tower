@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/app_main/devices/live_video.dart';
 import 'route_name.dart';
 import '../pages/error_page/error_page.dart';
 import '../pages/app_main/app_main.dart';
@@ -21,4 +22,5 @@ final Map<String,
   RouteName.login: (context, {params}) => Login(params: params),
   RouteName.device: (context, {params}) => DevicesPage(params: params),
   RouteName.channel: (context, {params}) => ChannelListPage(params: params,),
+  RouteName.liveVideo: (context, {params}) => VideoLivePage(params: params),
 };
