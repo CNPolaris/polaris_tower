@@ -40,22 +40,22 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   void initState() {
     super.initState();
 
-    _updateSystemInfoTimer = Timer.periodic(Duration(milliseconds: AppConfig.updateDelay), (timer) async {
-      ///定时任务
-      SystemInfoResp sysInfoRes = await getSystemInfo();
-      if(sysInfoRes.code == 0) {
-        List<CpuInfo?>? cpuList = sysInfoRes.data!.cpu;
-        _cpuInfoStore.set(cpuList);
-      }
-
-      ResourceInfoResp resp = await getResourceInfo();
-      if (resp.code == 0) {
-        _device = resp.data!.device!;
-        _channel = resp.data!.channel!;
-        _proxy = resp.data!.proxy!;
-        _push = resp.data!.push!;
-      }
-    });
+    // _updateSystemInfoTimer = Timer.periodic(Duration(milliseconds: AppConfig.updateDelay), (timer) async {
+    //   ///定时任务
+    //   SystemInfoResp sysInfoRes = await getSystemInfo();
+    //   if(sysInfoRes.code == 0) {
+    //     List<CpuInfo?>? cpuList = sysInfoRes.data!.cpu;
+    //     _cpuInfoStore.set(cpuList);
+    //   }
+    //
+    //   ResourceInfoResp resp = await getResourceInfo();
+    //   if (resp.code == 0) {
+    //     _device = resp.data!.device!;
+    //     _channel = resp.data!.channel!;
+    //     _proxy = resp.data!.proxy!;
+    //     _push = resp.data!.push!;
+    //   }
+    // });
   }
 
   @override
@@ -80,7 +80,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
     final width = size.width;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: BrnAppBar(
         title: const Text('控制台'),
         automaticallyImplyLeading: false,
       ),
