@@ -110,16 +110,9 @@ class _DevicesPageState extends State<DevicesPage> with AutomaticKeepAliveClient
         automaticallyImplyLeading: false,
       ),
 
-      body: _buildPageListView(),
-    );
-  }
-
-  Widget _contextWidget() {
-    return Column(
-      children: <Widget>[
-        // _buildSearchWidget(),
-        _buildPageListView()
-      ],
+      body: Container(
+        child: _buildPageListView(),
+      ),
     );
   }
 
@@ -149,7 +142,9 @@ class _DevicesPageState extends State<DevicesPage> with AutomaticKeepAliveClient
         builderDelegate: PagedChildBuilderDelegate(
           animateTransitions: true,
           itemBuilder: (context, item, index) => BrnShadowCard(
+            borderWidth: 0,
             circular: 5,
+            blurRadius: 0,
             padding: const EdgeInsets.only(
               top: 5,
               left: 5,
@@ -161,7 +156,7 @@ class _DevicesPageState extends State<DevicesPage> with AutomaticKeepAliveClient
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
-                  Navigator.pushNamed(context, RouteName.channel, arguments: {'deviceId': item.deviceId});
+                  Navigator.pushNamed(context, RouteName.channel, arguments: {'deviceId': item.deviceId, 'onLine': item.onLine});
                 },
                 child: IntrinsicHeight(
                   child: Column(

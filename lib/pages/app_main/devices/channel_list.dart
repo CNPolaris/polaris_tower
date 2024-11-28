@@ -28,13 +28,14 @@ class _ChannelListPageState extends State<ChannelListPage> with AutomaticKeepAli
   PagingController(firstPageKey: 1);
 
   late String deviceId;
-  bool onLine = false;
+  late bool onLine;
 
   @override
   void initState() {
     super.initState();
     LogUtil.d(widget.params);
     deviceId = widget.params['deviceId'];
+    onLine = widget.params['onLine'];
 
     _pagingController.addPageRequestListener(_fetchPage);
     _pagingController.addStatusListener(_showError);
@@ -50,13 +51,6 @@ class _ChannelListPageState extends State<ChannelListPage> with AutomaticKeepAli
   }
 
   void updateChannelsList() async {
-    // DeviceQueryByIdResp device = DevicesApi.getDeviceByDeviceId(deviceId) as DeviceQueryByIdResp;
-    // if(device.code == 0) {
-    //   onLine = device.data!.onLine;
-    // } else {
-    //   onLine = false;
-    // }
-
     _pagingController.refresh();
   }
 
@@ -101,7 +95,7 @@ class _ChannelListPageState extends State<ChannelListPage> with AutomaticKeepAli
       appBar: BrnAppBar(
         title: '通道列表',
       ),
-      body: _buildChannelList(),
+      body: _buildChannelList()
     );
   }
 
@@ -120,34 +114,47 @@ class _ChannelListPageState extends State<ChannelListPage> with AutomaticKeepAli
               right: 5,
               bottom: 5,
             ),
-            child: Container(
-              child: GestureDetector(
-                child: IntrinsicHeight(
-                    child: Row(
-                      children: [
-                        Image.network(
-                          "${AppConfig.host}/api/device/query/snap/$deviceId/${item.deviceId}",
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.fill,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              BrnStateTag(
-                                tagText: onLine ? '在线' : '离线',
-                                tagState: onLine ? TagState.succeed: TagState.failed,
-                              ),
-                              Text('名称: ${item.name}'),
-                              Text('编号:${item.deviceId}'),
-                            ],
-                           ),
-                        ),
-                      ],
-                    )
-                ),
+            child: GestureDetector(
+              child: IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      Image.network(
+                        "${AppConfig.host}/api/device/query/snap/$deviceId/${item.deviceId}",
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.fill,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            BrnStateTag(
+                              tagText: onLine ? '在线' : '离线',
+                              tagState: onLine ? TagState.succeed: TagState.failed,
+                            ),
+                            Text('名称: ${item.name}'),
+                            Text('编号:${item.deviceId}'),
+                          ],
+                         ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          ElevatedButton.icon(
+                            icon: Icon(Icons.play_arrow),
+                            label: Text("播放"),
+                            onPressed: () {},
+                          ),
+                          ElevatedButton.icon(
+                            icon: Icon(Icons.emergency_recording),
+                            label: Text("录像"),
+                            onPressed: () {},
+                          )
+                        ],
+                      )
+                    ],
+                  )
               ),
             )
           ),
